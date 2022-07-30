@@ -1,0 +1,16 @@
+.NavBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background-color: #fff;
+  height: 60px;
+}
+
+.Hamburger {
+  margin-right: 30px;
+}
+
+.Kjh-Logo {
+  height: 60px;
+}
