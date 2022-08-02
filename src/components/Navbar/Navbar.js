@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import KJHLogo from "../../assets/navbar-logo.png";
 import { Link } from "react-router-dom";
 import Hamburger from "hamburger-react";
@@ -13,6 +14,7 @@ const NavBar = () => {
       <Link to="/my-classes">
         <img src={KJHLogo} alt="KJH Logo" className="Kjh-Logo" />
       </Link>
+      <span className="Title">KJH Classes</span>
       <NavbarModal
         closeModal={() => setModalOpen(false)}
         isModalOpen={modalOpen}

@@ -1,5 +1,12 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged,
+} from "firebase/auth";
+import { doc, getFirestore, setDoc, getDoc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCtH2orFZKv7W0TRtMQjHSB38cqTWpF6A0",
@@ -12,7 +19,9 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-initializeApp(firebaseConfig);
+const firebaseApp = initializeApp(firebaseConfig);
+
+const db = getFirestore(firebaseApp);
 
 const provider = new GoogleAuthProvider();
 provider.setCustomParameters({
@@ -20,6 +29,30 @@ provider.setCustomParameters({
 });
 
 provider.setCustomParameters({ prompt: "select_account" });
-
-export const auth = getAuth();
+const auth = getAuth();
 export const signInWithGoogle = () => signInWithPopup(auth, provider);
+
+export const createUserDocumentFromAuth = async (userAuth) => {
+  const userDocRef = doc(db, "users", userAuth.uid);
+
+  const userSnapshot = await getDoc(userDocRef);
+
+  if (!userSnapshot.exists()) {
+    const { displayName } = userAuth;
+    try {
+      await setDoc(userDocRef, {
+        displayName,
+        classes: [],
+      });
+    } catch (error) {
+      console.log("There was an error creating user", error.message);
+    }
+  }
+
+  return userDocRef;
+};
+
+export const signOutUser = async () => await signOut(auth);
+
+export const onAuthStateChangedListener = (callback) =>
+  onAuthStateChanged(auth, callback);
