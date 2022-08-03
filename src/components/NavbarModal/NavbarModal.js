@@ -16,27 +16,31 @@ const NavbarModal = ({ isModalOpen, closeModal }) => {
   };
   return (
     <div className={`NavbarModal Right-${isModalOpen}`}>
-      <NavbarModalOption closeModal={closeModal} link="/my-classes">
+      <NavbarModalOption clicked={closeModal} link="/my-classes">
         My Classes
       </NavbarModalOption>
-      <NavbarModalOption closeModal={closeModal} link="/change-classes">
+      <NavbarModalOption clicked={closeModal} link="/change-classes">
         Change Classes
       </NavbarModalOption>
-      <NavbarModalOption closeModal={closeModal} link="/all-classes">
+      <NavbarModalOption clicked={closeModal} link="/all-classes">
         All Classes
       </NavbarModalOption>
       {!currentUser ? (
         <NavbarModalOption
-          clicked={handleSignIn}
-          closeModal={closeModal}
+          clicked={() => {
+            handleSignIn();
+            closeModal();
+          }}
           link="/my-classes"
         >
           Log In
         </NavbarModalOption>
       ) : (
         <NavbarModalOption
-          clicked={handleSignOut}
-          closeModal={closeModal}
+          clicked={() => {
+            handleSignOut();
+            closeModal();
+          }}
           link="/my-classes"
         >
           Sign Out
