@@ -1,0 +1,24 @@
+.PeriodBox {
+  border: 2px solid #006400;
+  margin: 20px;
+  border-radius: 15px;
+  display: flex;
+  flex-flow: column;
+  padding: 10px;
+  text-transform: capitalize;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+.PeriodHeading {
+  font-size: 20px;
+  border-bottom: 2px solid #8f8f8f;
+  padding: 4px;
+}
+
+.BoxContent {
+  padding: 4px;
+}
+
+.Isnull {
+  border: 3px dashed #df0000;
+}

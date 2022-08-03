@@ -1,0 +1,13 @@
+.ChangePeriod {
+  height: 100vh;
+  flex-flow: column;
+}
+
+.ChangePeriodHeading {
+  margin: 30px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  border-bottom: 2px solid #8f8f8f;
+  padding-bottom: 20px;
+  font-size: 29px;
+  text-align: center;
+}

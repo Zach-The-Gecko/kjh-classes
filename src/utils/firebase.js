@@ -42,18 +42,7 @@ export const createUserDocumentFromAuth = async (userAuth) => {
     try {
       await setDoc(userDocRef, {
         displayName,
-        classes: [
-          { class: "enriched reading", teacher: "coyle" },
-          { class: "social studies", teacher: "done" },
-          null,
-          { class: "math", teacher: "pierce" },
-          { class: "science", teacher: "parker" },
-          { class: "history", teacher: "burbank" },
-          { class: "robotics", teacher: "balling" },
-          { class: "health", teacher: "murray" },
-          { class: "orchestra", teacher: "kochendurfer" },
-          { class: "hope squad", teacher: "pectol" },
-        ],
+        classes: [null, null, null, null, null, null, null, null, null, null],
       });
     } catch (error) {
       console.log("There was an error creating user", error.message);
@@ -68,10 +57,8 @@ export const signOutUser = async () => await signOut(auth);
 export const onAuthStateChangedListener = (callback) =>
   onAuthStateChanged(auth, callback);
 
-export const getUserClasses = async (userDocRef) => {
-  const returnVal = (
-    await getDoc(userDocRef)
-  )._document.data.value.mapValue.fields.classes.arrayValue.values.map(
+const convertFirebaseDataToArr = (data) => {
+  return data._document.data.value.mapValue.fields.classes.arrayValue.values.map(
     (classObj) => {
       if (!Object.keys(classObj).includes("nullValue")) {
         const newClassObj = {};
@@ -83,5 +70,13 @@ export const getUserClasses = async (userDocRef) => {
       return null;
     }
   );
-  return returnVal;
+};
+
+export const getUserClasses = async (userDocRef) => {
+  return convertFirebaseDataToArr(await getDoc(userDocRef));
+};
+
+export const getPeriodClasses = async (period) => {
+  const periodClasses = await getDoc(doc(db, "AllClasses", `Period${period}`));
+  return periodClasses._document ? convertFirebaseDataToArr(periodClasses) : [];
 };

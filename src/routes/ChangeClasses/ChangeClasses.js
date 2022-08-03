@@ -1,9 +1,10 @@
 import React, { useContext, useState } from "react";
 import { UserContext } from "../../contexts/user.context";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import "./ChangeClasses.css";
 import { getUserClasses } from "../../utils/firebase";
 import { useEffect } from "react";
+import ClassCard from "../../components/ClassCard/ClassCard";
 
 const ChangeClasses = () => {
   const { currentUser } = useContext(UserContext);
@@ -33,15 +34,9 @@ const ChangeClasses = () => {
       ) : (
         [...Array(10)].map((_item, ind) => {
           return (
-            <div className={`PeriodBox Is${classes[ind]}`} key={ind}>
-              <span className="PeriodHeading">Period {ind + 1}</span>
-              <span className="BoxContent">
-                {classes[ind] ? classes[ind].class : "none"}
-              </span>
-              <span className="BoxContent">
-                {classes[ind] ? classes[ind].teacher : "none"}
-              </span>
-            </div>
+            <Link to={`/change-period/${ind + 1}`} key={ind}>
+              <ClassCard period={classes[ind]} periodNum={ind} />
+            </Link>
           );
         })
       )}
