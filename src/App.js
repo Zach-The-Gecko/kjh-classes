@@ -7,6 +7,7 @@ import ChangeClasses from "./routes/ChangeClasses/ChangeClasses";
 import AllClasses from "./routes/AllClasses/AllClasses";
 import Navbar from "./components/Navbar/Navbar";
 import NotSignedIn from "./routes/NotSignedIn/NotSignedIn";
+import MyClass from "./routes/MyClass/MyClass";
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/my-classes" element={<MyClasses />} />
         <Route path="/all-classes" element={<AllClasses />} />
         <Route path="/change-classes" element={<ChangeClasses />} />
+        <Route path="/my-class/:period" element={<MyClass />} />
         <Route path="/change-period/:period" element={<ChangePeriod />} />
       </Routes>
     </div>

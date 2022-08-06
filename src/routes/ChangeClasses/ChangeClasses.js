@@ -30,7 +30,7 @@ const ChangeClasses = () => {
         <span className="ButtonChangeClassHeading">Copy Classes</span>
       </div>
       {!currentUser ? (
-        <Navigate to="/sign-in" />
+        <Navigate to={`/sign-in?redirect=${window.location.pathname}`} />
       ) : (
         [...Array(10)].map((_item, ind) => {
           return (

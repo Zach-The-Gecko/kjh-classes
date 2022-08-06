@@ -51,7 +51,9 @@ const ChangePeriod = () => {
   }, [currentUser, period]);
   return (
     <div className="ChangePeriod Page">
-      {!currentUser && <Navigate to="/sign-in" />}
+      {!currentUser && (
+        <Navigate to={`/sign-in?redirect=${window.location.pathname}`} />
+      )}
       <div className="ChangePeriodHeading">
         <span>Period {period}</span>
       </div>
