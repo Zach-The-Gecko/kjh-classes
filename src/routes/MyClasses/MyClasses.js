@@ -8,7 +8,7 @@ import "./MyClasses.css";
 const MyClasses = () => {
   const { currentUser } = useContext(UserContext);
   return (
-    <div className="MyClasses">
+    <div className="MyClasses Page">
       {!currentUser && <Navigate to="/sign-in" />}
       <h1>These are my classes!</h1>1
     </div>

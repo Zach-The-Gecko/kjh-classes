@@ -7,7 +7,7 @@ import "./NotSignedIn.css";
 const NotSignedIn = () => {
   const { currentUser } = useContext(UserContext);
   return (
-    <div className="NotSignedIn">
+    <div className="NotSignedIn Page">
       {currentUser && <Navigate to="/change-classes" />}
       <div className="NotSignedInTextContainer">
         <span>You are not signed in, please sign in to use the app</span>

@@ -4,7 +4,7 @@ import searchIcon from "../../assets/search.svg";
 import { getPeriodClasses } from "../../utils/firebase";
 import ClassCard from "../ClassCard/ClassCard";
 
-const SearchClasses = ({ period, cardClicked }) => {
+const SearchClasses = ({ period, cardClicked, emptyMessage }) => {
   const [periodClasses, setPeriodClasses] = useState([]);
   const [searchInput, setSearchInput] = useState("");
 
@@ -43,13 +43,18 @@ const SearchClasses = ({ period, cardClicked }) => {
               },
               ""
             );
-            if (stringToFilter.includes(searchInput.replace(/\s/g, ""))) {
+            if (
+              stringToFilter
+                .toLowerCase()
+                .includes(searchInput.toLowerCase().replace(/\s/g, ""))
+            ) {
               return (
                 <ClassCard
                   period={periodClass}
                   periodNum={period - 1}
                   key={ind}
-                  onClick={() => cardClicked(periodClass, period)}
+                  ind={ind}
+                  onClick={() => cardClicked(periodClass, period, ind)}
                 />
               );
             } else {
@@ -57,7 +62,9 @@ const SearchClasses = ({ period, cardClicked }) => {
             }
           })
         ) : (
-          <span>No Classes</span>
+          <div className="EmptyMessage">
+            <span>{emptyMessage}</span>
+          </div>
         )}
       </div>
     </div>

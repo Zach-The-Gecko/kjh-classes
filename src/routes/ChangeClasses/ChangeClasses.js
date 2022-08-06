@@ -21,7 +21,7 @@ const ChangeClasses = () => {
   }, [currentUser]);
 
   return (
-    <div className="ChangeClasses">
+    <div className="ChangeClasses Page">
       <div className="ChangeClassHeading">
         <span>
           Click on a class to change its subject, or copy and paste your classes

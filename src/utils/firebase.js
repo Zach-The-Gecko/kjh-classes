@@ -50,7 +50,7 @@ export const createUserDocumentFromAuth = async (userAuth) => {
         classes: [null, null, null, null, null, null, null, null, null, null],
       });
     } catch (error) {
-      console.log("There was an error creating user", error.message);
+      console.error("There was an error creating user", error.message);
     }
   }
 
@@ -62,23 +62,26 @@ export const signOutUser = async () => await signOut(auth);
 export const onAuthStateChangedListener = (callback) =>
   onAuthStateChanged(auth, callback);
 
-const convertFirebaseDataToArr = (data, isUser) => {
+const convertFirebaseDataToArr = (data) => {
   return data._document.data.value.mapValue.fields.classes.arrayValue.values
     ? data._document.data.value.mapValue.fields.classes.arrayValue.values.map(
         (classObj) => {
           if (!Object.keys(classObj).includes("nullValue")) {
             const newClassObj = {};
-            newClassObj["teacher"] =
-              classObj.mapValue.fields["teacher"].stringValue;
-            newClassObj["class"] =
-              classObj.mapValue.fields["class"].stringValue;
-            if (!isUser) {
-              newClassObj["users"] = classObj.mapValue.fields.users
+            newClassObj.teacher = classObj.mapValue.fields.teacher.stringValue;
+            newClassObj.class = classObj.mapValue.fields.class.stringValue;
+            newClassObj.index = classObj.mapValue.fields.index.stringValue;
+
+            newClassObj.users =
+              classObj.mapValue.fields.users &&
+              classObj.mapValue.fields.users.arrayValue.values
                 ? classObj.mapValue.fields.users.arrayValue.values.map(
-                    (user) => user.stringValue
+                    (user) => {
+                      return user.stringValue;
+                    }
                   )
                 : [];
-            }
+
             return newClassObj;
           }
           return null;
@@ -104,34 +107,45 @@ export const changeClass = async (
   newPeriod,
   periodNum
 ) => {
-  if (previousPeriod.class === "none") {
-    const updatedUserClasses = await getUserClasses(currentUser.userDocRef);
-    updatedUserClasses[periodNum - 1] = newPeriod;
-    await setDoc(
-      currentUser.userDocRef,
-      { classes: updatedUserClasses },
-      { merge: true }
-    );
+  const updatedUserClasses = await getUserClasses(currentUser.userDocRef);
+  updatedUserClasses[periodNum - 1] = newPeriod;
+  await setDoc(
+    currentUser.userDocRef,
+    { classes: updatedUserClasses },
+    { merge: true }
+  );
 
-    // const updatedNewClass =
-    const periodClasses = await getPeriodClasses(periodNum);
-    const classInd = periodClasses.reduce((acc, periodClass, ind) => {
-      if (
-        periodClass.teacher === newPeriod.teacher &&
-        periodClass.class === newPeriod.class
-      ) {
-        return ind;
-      }
-      return acc;
-    }, []);
-    console.log(currentUser.userDocRef);
-    periodClasses[classInd].users.push(
+  const periodClasses = await getPeriodClasses(periodNum);
+  const classInd = periodClasses.reduce((acc, periodClass, ind) => {
+    if (periodClass.index === newPeriod.index) {
+      return ind;
+    }
+    return acc;
+  }, []);
+  periodClasses[classInd].users.push(
+    `${currentUser.userDocRef.id}@SEPERATE@${currentUser.displayName}`
+  );
+  if (!(previousPeriod.class === "none")) {
+    const userIndexToPop = periodClasses[previousPeriod.index].users.indexOf(
       `${currentUser.userDocRef.id}@SEPERATE@${currentUser.displayName}`
     );
-    console.log(periodClasses);
-
-    await setDoc(doc(db, "AllClasses", `Period${periodNum}`), {
-      periodClasses,
-    });
+    periodClasses[previousPeriod.index].users.pop(userIndexToPop);
   }
+  await setDoc(doc(db, "AllClasses", `Period${periodNum}`), {
+    classes: periodClasses,
+  });
+};
+
+export const submitClassToFB = async (periodNum, teacherToAdd, classToAdd) => {
+  const periodClasses = await getPeriodClasses(periodNum);
+  periodClasses.push({
+    class: classToAdd,
+    teacher: teacherToAdd,
+    index: `${periodClasses.length}`,
+    users: [],
+  });
+  await setDoc(doc(db, "AllClasses", `Period${periodNum}`), {
+    classes: periodClasses,
+  });
+  return `${periodClasses.length - 1}`;
 };

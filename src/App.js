@@ -11,7 +11,9 @@ import NotSignedIn from "./routes/NotSignedIn/NotSignedIn";
 const App = () => {
   return (
     <div className="App">
+      <div className="navbarBackground"></div>
       <Navbar />
+
       <Routes>
         <Route path="/sign-in" element={<NotSignedIn />} />
         <Route path="/" element={<Navigate to="/my-classes" />} />

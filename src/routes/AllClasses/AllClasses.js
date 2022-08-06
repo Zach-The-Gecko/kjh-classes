@@ -6,7 +6,7 @@ import "./AllClasses.css";
 const AllClasses = () => {
   const { currentUser } = useContext(UserContext);
   return (
-    <div className="AllClasses">
+    <div className="AllClasses Page">
       {!currentUser && <Navigate to="/sign-in" />}
       <h1>These are ALL of my classes!</h1>
     </div>
