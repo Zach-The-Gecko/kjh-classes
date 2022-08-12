@@ -7,7 +7,6 @@ import "./NotSignedIn.css";
 const NotSignedIn = () => {
   const { currentUser } = useContext(UserContext);
   const [searchParams] = useSearchParams();
-  console.log(searchParams.get("redirect"));
 
   return (
     <div className="NotSignedIn Page">

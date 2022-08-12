@@ -13,17 +13,9 @@
   display: none;
 }
 
-.AddAClassModalInput {
+.CopyClassesModalInput {
   margin: 10px;
   height: 20px;
-}
-
-.AddAClassModalBody {
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
-  color: rgb(242, 0, 0);
-  text-align: justify;
-  font-size: 22px;
-  margin: 20px;
 }
 
 .InputLabel {

@@ -47,7 +47,19 @@ export const createUserDocumentFromAuth = async (userAuth) => {
     try {
       await setDoc(userDocRef, {
         displayName,
-        classes: [null, null, null, null, null, null, null, null, null, null],
+        classes: [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+        ],
       });
     } catch (error) {
       console.error("There was an error creating user", error.message);
@@ -91,16 +103,27 @@ const convertFirebaseDataToArr = (data) => {
 };
 
 export const getUserClasses = async (userDocRef) => {
-  return convertFirebaseDataToArr(await getDoc(userDocRef), true);
+  const usersClasses = convertFirebaseDataToArr(await getDoc(userDocRef));
+  console.log(await getDoc(userDocRef));
+  console.log(usersClasses);
+  return usersClasses;
 };
 
 export const getPeriodClasses = async (period) => {
   const periodClasses = await getDoc(doc(db, "AllClasses", `Period${period}`));
-  return periodClasses._document
-    ? convertFirebaseDataToArr(periodClasses, false)
-    : [];
+  return periodClasses._document ? convertFirebaseDataToArr(periodClasses) : [];
 };
 
+export const isClassReal = async (classData) => {
+  const periodClasses = await getPeriodClasses(classData[0]);
+  const returnVal = periodClasses.reduce((acc, theClass) => {
+    if (theClass.class === classData[1] && theClass.teacher === classData[2]) {
+      return theClass.index;
+    }
+    return acc;
+  }, false);
+  return returnVal;
+};
 export const changeClass = async (
   currentUser,
   previousPeriod,
@@ -109,11 +132,12 @@ export const changeClass = async (
 ) => {
   const updatedUserClasses = await getUserClasses(currentUser.userDocRef);
   updatedUserClasses[periodNum - 1] = newPeriod;
-  await setDoc(
-    currentUser.userDocRef,
-    { classes: updatedUserClasses },
-    { merge: true }
-  );
+
+  // await setDoc(
+  //   currentUser.userDocRef,
+  //   { classes: updatedUserClasses },
+  //   { merge: true }
+  // );
 
   const periodClasses = await getPeriodClasses(periodNum);
   const classInd = periodClasses.reduce((acc, periodClass, ind) => {
@@ -125,7 +149,7 @@ export const changeClass = async (
   periodClasses[classInd].users.push(
     `${currentUser.userDocRef.id}@SEPERATE@${currentUser.displayName}`
   );
-  if (!(previousPeriod.class === "none")) {
+  if (previousPeriod && !(previousPeriod.class === "none")) {
     const userIndexToPop = periodClasses[previousPeriod.index].users.indexOf(
       `${currentUser.userDocRef.id}@SEPERATE@${currentUser.displayName}`
     );
