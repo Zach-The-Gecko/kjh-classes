@@ -6,7 +6,13 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
-import { doc, getFirestore, setDoc, getDoc } from "firebase/firestore";
+import {
+  doc,
+  getFirestore,
+  setDoc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCtH2orFZKv7W0TRtMQjHSB38cqTWpF6A0",
@@ -104,8 +110,6 @@ const convertFirebaseDataToArr = (data) => {
 
 export const getUserClasses = async (userDocRef) => {
   const usersClasses = convertFirebaseDataToArr(await getDoc(userDocRef));
-  console.log(await getDoc(userDocRef));
-  console.log(usersClasses);
   return usersClasses;
 };
 
@@ -133,11 +137,13 @@ export const changeClass = async (
   const updatedUserClasses = await getUserClasses(currentUser.userDocRef);
   updatedUserClasses[periodNum - 1] = newPeriod;
 
-  // await setDoc(
-  //   currentUser.userDocRef,
-  //   { classes: updatedUserClasses },
-  //   { merge: true }
-  // );
+  await setDoc(
+    currentUser.userDocRef,
+    { classes: updatedUserClasses },
+    { merge: true }
+  );
+  const userSnap = await getDoc(currentUser.userDocRef);
+  console.log(userSnap.exists());
 
   const periodClasses = await getPeriodClasses(periodNum);
   const classInd = periodClasses.reduce((acc, periodClass, ind) => {

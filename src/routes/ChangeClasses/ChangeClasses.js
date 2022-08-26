@@ -34,10 +34,8 @@ const ChangeClasses = () => {
         return acc;
       }
     }, []);
-    console.log("submit");
     classesArray.map(async (classData) => {
       const classRealValue = await isClassReal(classData);
-      console.log(!(await isClassReal(classData)));
       if (!classRealValue) {
         const index = await submitClassToFB(
           classData[0],
@@ -51,13 +49,14 @@ const ChangeClasses = () => {
           classData[0]
         );
       } else {
-        changeClass(
+        await changeClass(
           currentUser,
           classes[classData[0] - 1],
           { class: classData[1], teacher: classData[2], classRealValue },
           classData[0]
         );
       }
+      return;
     });
   };
 
@@ -80,7 +79,10 @@ const ChangeClasses = () => {
         </span>
         <span
           className="ButtonChangeClassHeading"
-          onClick={() => setModalOpen(!modalOpen)}
+          onClick={() => {
+            setModalOpen(!modalOpen);
+            console.log(getUserClasses(currentUser.userDocRef));
+          }}
         >
           Copy Classes
         </span>
